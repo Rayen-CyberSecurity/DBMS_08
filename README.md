@@ -53,7 +53,8 @@ docker compose version
 
 > **Screenshot 1:** Take a screenshot showing both version outputs.
 >
-> `[insert screenshot]`
+> <img width="451" height="99" alt="image" src="https://github.com/user-attachments/assets/921d8d25-06a2-4d83-b814-4e99d17c55d7" />
+
 
 ---
 
@@ -78,7 +79,8 @@ docker images
 > **Screenshot 2:** Take a screenshot showing `docker ps -a` and
 > `docker images` output.
 >
-> `[insert screenshot]`
+> <img width="1087" height="165" alt="image" src="https://github.com/user-attachments/assets/f1c96663-6d40-40a9-87a6-bdf8a73ed4ae" />
+
 
 ### Step 2 – Run an nginx Webserver
 
@@ -108,13 +110,13 @@ docker system df
 **Question 1.1:** The flag `-d` starts the container in detached mode.
 What happens without `-d`, and why is detached mode useful for a web server?
 
-> *Your answer:*
+> Without `-d`, the container runs in the foreground and my terminal stays attached to it. Detached mode is useful for a web server because the server can keep running in the background while I continue using the terminal.
 
 **Question 1.2:** `-p 8080:80` maps host port 8080 to container port 80.
 Which port is the application actually listening on inside the container?
 What would `-p 9000:80` change?
 
-> *Your answer:*
+> Inside the container, nginx is listening on port `80`. The option `-p 8080:80` means I access it from the host on port `8080`; if I use `-p 9000:80`, the container still listens on `80`, but I open it on the host with `http://localhost:9000`.
 
 ---
 
@@ -160,7 +162,8 @@ exit
 > **Screenshot 3:** Take a screenshot showing the `docker build` output and
 > the commands run inside the container.
 >
-> `[insert screenshot]`
+> <img width="1144" height="643" alt="image" src="https://github.com/user-attachments/assets/b927886b-99cf-4043-942d-228a3ee8aa70" />
+
 
 ### Step 4 – Commit
 
@@ -176,13 +179,13 @@ git push -u origin main
 `apt-get install`, and `rm -rf /var/lib/apt/lists/*` in a single line?
 What would happen to the image size if these were three separate `RUN` lines?
 
-> *Your answer:*
+> The commands are combined in one `RUN` line so Docker creates only one layer and the apt cache is removed in the same layer. If they were three separate `RUN` lines, the old package lists could remain in previous layers and make the image larger.
 
 **Question 2.2:** `EXPOSE 80` in a Dockerfile does **not** actually open port
 80. What does it do, and what is required at `docker run` time to actually
 forward a port?
 
-> *Your answer:*
+> `EXPOSE 80` is mainly documentation/metadata showing that the container application expects to use port `80`. To actually make the port reachable from the host, I still need to publish it at runtime with something like `docker run -p 8080:80 ...`.
 
 ---
 
@@ -231,13 +234,13 @@ docker exec -it pg psql -U postgres -c "SELECT * FROM test;"
 `postgres:16` still exists on your machine. Why does recreating a container
 from the same image not restore the data?
 
-> *Your answer:*
+> A Docker image is only the starting template. The data I created was stored in the writable layer of the container, and when I removed the container, that layer was deleted. Creating a new container from the same image starts fresh.
 
 **Question 3.2:** `docker stop` sends SIGTERM and waits for the process to
 exit cleanly. `docker kill` sends SIGKILL immediately. Why is `docker stop`
 preferred for a database container?
 
-> *Your answer:*
+> `docker stop` gives the database time to shut down cleanly, finish writes, and close files correctly. `docker kill` stops it immediately, which can interrupt database operations and may risk inconsistent data.
 
 ---
 
@@ -302,13 +305,13 @@ docker volume rm pg_data
 the host filesystem. Why is it still recommended to use named volumes instead
 of bind-mounting that path directly with `-v /var/lib/docker/volumes/...`?
 
-> *Your answer:*
+> Named volumes are managed by Docker, so Docker handles the real storage path, permissions, and portability. The internal mountpoint path under `/var/lib/docker/...` is an implementation detail and should not be used directly because it can change or cause permission problems.
 
 **Question 4.2:** You want to back up the database. Which `docker` command
 lets you copy files out of a running container, and how would you copy the
 volume contents to a `.tar.gz` archive on the host?
 
-> *Your answer:*
+> The command `docker cp` can copy files out of a running container. To archive a volume, I can start a temporary container with the volume mounted and run a command like `docker run --rm -v pg_data:/data -v "$PWD":/backup alpine tar czf /backup/pg_data.tar.gz -C /data .`.
 
 ---
 
@@ -377,13 +380,13 @@ docker volume rm pg_data
 the default bridge. Why can containers on the default bridge **not** resolve
 each other by name, while containers on a user-defined bridge can?
 
-> *Your answer:*
+> On the default bridge network, Docker does not automatically provide name resolution between containers. On a user-defined bridge network, Docker provides internal DNS, so containers can reach each other using their container names.
 
 **Question 5.2:** You could find the IP address of the `pg` container with
 `docker inspect` and hard-code it. Why is using the container name as a
 hostname strongly preferable?
 
-> *Your answer:*
+> A container IP address can change when the container is recreated. Using the container name is more stable, easier to read, and works automatically with Docker's internal DNS on a user-defined network.
 
 ---
 
@@ -520,6 +523,8 @@ docker compose down -v   # also removes the named volume
 
 > **Question:** What is the difference between `down` and `down -v`?
 > When would you use each?
+>
+> `docker compose down` stops and removes the containers and networks, but it keeps the named volumes. `docker compose down -v` also removes the volumes, so database data is deleted. I would use `down` for a normal stop/restart and `down -v` when I want to reset everything and start with an empty database.
 
 ### Step 7 – Commit
 
@@ -535,13 +540,13 @@ git push -u origin main
 starts before `api`. Does it guarantee that PostgreSQL is **ready to accept
 connections** when the API starts? What is the correct way to handle this?
 
-> *Your answer:*
+> `depends_on` only controls start order. It does not guarantee that PostgreSQL is already ready to accept connections. The correct solution is to use a healthcheck and/or retry logic in the API so it waits until the database is actually reachable.
 
 **Question 6.2:** The `api` service uses `volumes: - ./api:/app` (a bind
 mount). What is the advantage of this during development compared to
 `COPY`-ing the code into an image at build time?
 
-> *Your answer:*
+> The bind mount makes the local `./api` folder available directly inside the container. This is useful during development because code changes on the host are immediately visible in the container without rebuilding the image every time.
 
 ---
 
@@ -629,13 +634,13 @@ git push
 `init.sql`, and run `docker compose up -d` again. The schema change does
 **not** appear in the database. Why not, and how do you force re-initialisation?
 
-> *Your answer:*
+> The init script only runs on the first start when the PostgreSQL data directory is empty. If I only run `docker compose down`, the volume remains, so the old database stays. To force re-initialisation, I use `docker compose down -v` to remove the volume and then start again.
 
 **Question 7.2:** `GENERATED ALWAYS AS IDENTITY` is used instead of
 `SERIAL`. What is the practical difference? Which one is the modern
 SQL-standard approach?
 
-> *Your answer:*
+> `SERIAL` is a PostgreSQL shortcut that creates a sequence behind the scenes. `GENERATED ALWAYS AS IDENTITY` is the modern SQL-standard way to create auto-generated IDs, so it is preferred for new projects.
 
 ---
 
@@ -728,13 +733,13 @@ git push
 What is the standard practice to document which variables are required
 without committing the actual secrets?
 
-> *Your answer:*
+> The standard practice is to commit an example file such as `.env.example` with the required variable names but fake or empty values. The real `.env` stays local and is not committed.
 
 **Question 8.2:** Even with `.env` excluded from git, the password is still
 stored in plain text on disk. Name one mechanism Docker provides for
 production-grade secret management that avoids plain-text env files entirely.
 
-> *Your answer:*
+> Docker provides Docker Secrets, for example with `docker secret` in Docker Swarm. This is better for production because secrets are managed separately instead of being stored as plain text in an `.env` file.
 
 ---
 
@@ -831,13 +836,13 @@ git push
 environment from the builder stage. The final image does not contain `pip` or
 `uv`. What security advantage does this provide?
 
-> *Your answer:*
+> The final image has fewer tools installed, so there is a smaller attack surface. If `pip` and `uv` are not present, an attacker has fewer easy tools available to install or modify packages inside the running container.
 
 **Question 9.2:** The builder stage installs dependencies from `pyproject.toml`
 before copying the application code. Why does this ordering improve build
 cache efficiency when you frequently change only `main.py`?
 
-> *Your answer:*
+> Docker can cache the dependency installation layer because `pyproject.toml` changes less often than the application code. If I only change `main.py`, Docker can reuse the dependency layer and rebuild much faster.
 
 ---
 
@@ -895,13 +900,13 @@ git push
 **Question 10.1:** The `USER appuser` instruction is placed after
 `COPY . .`. Why would placing it *before* `COPY` cause a permission problem?
 
-> *Your answer:*
+> If `USER appuser` is placed before `COPY`, the non-root user may not have permission to write files into the application directory or may get files with wrong ownership. Copying files first as root and switching to `appuser` afterward avoids this problem.
 
 **Question 10.2:** State the **Principle of Least Privilege** in one
 sentence, and name one other place in a typical web application stack
 (outside of containers) where this principle is applied.
 
-> *Your answer:*
+> The Principle of Least Privilege means that every user, service, or process should only get the permissions it really needs. Another example is using a database user that can only access the required tables instead of using a database superuser.
 
 ---
 
@@ -912,19 +917,19 @@ Section 6 of the lecture shows a Dockerfile that runs both PostgreSQL and
 FastAPI in a single container. Describe two concrete operational problems
 this causes in a production environment.
 
-> *Your answer:*
+> Running PostgreSQL and FastAPI in one container makes it hard to restart, update, or scale them independently. It also mixes logs, health checks, backups, and failures, so one service can disturb the other.
 
 **Question B – Volume vs. Bind Mount:**  
 Compare named volumes and bind mounts. When is each type appropriate?
 
-> *Your answer:*
+> Named volumes are managed by Docker and are best for persistent application data such as database files. Bind mounts connect a specific host folder to a container and are useful for development code, configuration files, or init scripts.
 
 **Question C – Compose and Reproducibility:**  
 A colleague says: "I can just write the `docker run` commands in a shell
 script — why do I need `docker-compose.yml`?" Give two specific advantages
 of Compose over a shell script of `docker run` commands.
 
-> *Your answer:*
+> Compose gives one clear, version-controlled YAML file that describes services, networks, volumes, ports, and dependencies. It is also easier to reproduce on another machine than a shell script because Compose automatically manages service names, networks, and volumes.
 
 **Question D – The Complete Chain:**  
 You have now built and containerised the full stack: PostgreSQL in a
@@ -933,7 +938,7 @@ non-root image → both orchestrated by Docker Compose with credentials
 in `.env`. Describe in two sentences what each layer contributes to
 **portability** and **security**.
 
-> *Your answer:*
+> PostgreSQL in a container with a named volume and init script makes the database portable and keeps its data persistent. The FastAPI slim non-root image improves security by reducing tools and privileges, while Docker Compose and `.env` make the stack easy to start and keep credentials out of the repository.
 
 ---
 
