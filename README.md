@@ -226,7 +226,8 @@ docker exec -it pg psql -U postgres -c "SELECT * FROM test;"
 
 > **Screenshot 4:** Take a screenshot showing the error message.
 >
-> `[insert screenshot]`
+> <img width="931" height="119" alt="image" src="https://github.com/user-attachments/assets/869c84f1-8fdd-4348-8052-f95d6370ef9a" />
+
 
 ### Questions for Section 3
 
@@ -290,7 +291,8 @@ docker volume inspect pg_data
 > **Screenshot 5:** Take a screenshot showing the `SELECT` result after
 > container recreation, and the `docker volume inspect` output.
 >
-> `[insert screenshot]`
+> <img width="934" height="489" alt="image" src="https://github.com/user-attachments/assets/ce6379eb-5786-4276-b199-77e1358ea165" />
+
 
 ### Step 3 – Clean Up
 
@@ -339,7 +341,8 @@ docker run --rm -it postgres:16 \
 
 > **Screenshot 6:** Take a screenshot showing the connection error.
 >
-> `[insert screenshot]`
+> <img width="841" height="133" alt="image" src="https://github.com/user-attachments/assets/e48c3f8e-2901-4ce9-a8fa-1cce514f637e" />
+
 
 ### Step 2 – Fix It With a Custom Bridge Network
 
@@ -503,7 +506,8 @@ curl http://localhost:8000/studenten
 > **Screenshot 7:** Take a screenshot showing `docker compose ps` and the
 > `curl /` response.
 >
-> `[insert screenshot]`
+> <img width="1247" height="368" alt="image" src="https://github.com/user-attachments/assets/82cc4866-447e-4563-989e-8553b17eacf5" />
+
 
 ### Step 5 – Observe Compose Networking
 
@@ -618,7 +622,8 @@ curl http://localhost:8000/studenten
 > **Screenshot 8:** Take a screenshot showing the `curl /studenten` response
 > with all four rows.
 >
-> `[insert screenshot]`
+> <img width="1241" height="64" alt="image" src="https://github.com/user-attachments/assets/de7eaa47-44e0-4fda-b3a7-29098e7d0aed" />
+
 
 ### Step 4 – Commit
 
@@ -724,7 +729,8 @@ git push
 > **Screenshot 9:** Take a screenshot showing `git status` confirming
 > `.env` is not staged, and the working `curl` response.
 >
-> `[insert screenshot]`
+> <img width="1237" height="360" alt="image" src="https://github.com/user-attachments/assets/5c3b4f3d-828a-436a-bbdc-d4580aa5720a" />
+
 
 ### Questions for Section 8
 
@@ -820,7 +826,8 @@ curl http://localhost:8000/studenten
 > **Screenshot 10:** Take a screenshot showing `docker images` with the
 > final image size and the working `curl` response.
 >
-> `[insert screenshot]`
+> <img width="1238" height="366" alt="image" src="https://github.com/user-attachments/assets/8849be44-2252-44e6-8654-c2fe3306f2bf" />
+
 
 ### Step 5 – Commit
 
@@ -885,7 +892,8 @@ docker compose exec api whoami
 > **Screenshot 11:** Take a screenshot showing `docker compose exec api whoami`
 > returning `appuser`.
 >
-> `[insert screenshot]`
+> <img width="676" height="63" alt="image" src="https://github.com/user-attachments/assets/5d08934e-a6c8-4b1c-9782-52b2191603fd" />
+
 
 ### Step 3 – Commit
 
