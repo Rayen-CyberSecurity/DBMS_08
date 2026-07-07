@@ -12,11 +12,8 @@ services:
       - backend
 
   api:
-    image: python:3.12-slim
+    build: ./api
     working_dir: /app
-    volumes:
-      - ./api:/app
-    command: bash -c "pip install fastapi uvicorn psycopg2-binary --quiet && uvicorn main:app --host 0.0.0.0 --port 8000"
     ports:
       - "8000:8000"
     depends_on:
